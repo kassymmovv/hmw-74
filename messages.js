@@ -1,9 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const fs = require('fs');
-const message = './messages';
 
+router.get('/', (req,res) => {
 
+    try {
+        const files = fs.readdirSync('./messages').reverse();
+        const count = files.length < 5 ? files.length : 5;
+        const array  = [];
+        for(let i = 0; i < count; i++) {
+            const file = fs.readFileSync('./messages/' + files[i]);
+            array.push(JSON.parse(file.toString()))
+        }
+        res.send(array)
+    } catch (e) {
+        console.log(e);
+    }
+
+});
 
 router.post('/',(req,res) => {
     const date = new Date().toISOString();
